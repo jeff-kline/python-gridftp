@@ -12,17 +12,7 @@ class GridFTPClientException(exceptions.Exception):
 
     Used for errors in the gridftpClient module.
     """
-    def __init__(self, args=None):
-        """
-        Constructs an instance.
-
-        @type   args: string
-        @param  args: The string to use as the exception message.
-
-        @rtype: instance
-        @return: an instance of the class
-        """
-        pass
+    pass
 
 class HandleAttr(object):
     """
@@ -67,7 +57,7 @@ class HandleAttr(object):
             try:
                 gridftpwrapper.gridftp_handleattr_destroy(self._attr)
             except Exception, e:
-                msg = "Unable to destroy an operation attr: %s" % e
+                msg = "Unable to destroy a handle attr: %s" % e
                 ex = GridFTPClientException(msg)
                 raise ex
 
