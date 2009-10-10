@@ -729,10 +729,10 @@ class FTPClient(object):
         third party transfer
         """
 
-        if not srcOpAttr:
-            srcOpAttr = OperationAttr()
-        if not dstOpAttr:
-            dstOpAttr = OperationAttr()
+        if not srcOpAttr or not dstOpAttr:
+            msg = "Both a source and destination OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
 
         try:
             gridftpwrapper.gridftp_third_party_transfer(
@@ -795,7 +795,9 @@ class FTPClient(object):
 
         """
         if not opAttr:
-            opAttr = OperationAttr()
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
 
         try:
             gridftpwrapper.gridftp_get(
@@ -916,7 +918,9 @@ class FTPClient(object):
         """
 
         if not opAttr:
-            opAttr = OperationAttr()
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
         if not offset:
             offset = 0
         if not length:
@@ -966,7 +970,9 @@ class FTPClient(object):
         """
 
         if not opAttr:
-            opAttr = OperationAttr()
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
 
         try:
             gridftpwrapper.gridftp_mkdir(self._handle, url, opAttr._attr, completeCallback, arg)
@@ -1012,7 +1018,9 @@ class FTPClient(object):
         """
 
         if not opAttr:
-            opAttr = OperationAttr()
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
 
         try:
             gridftpwrapper.gridftp_rmdir(self._handle, url, opAttr._attr, completeCallback, arg)
@@ -1058,7 +1066,9 @@ class FTPClient(object):
         """
 
         if not opAttr:
-            opAttr = OperationAttr()
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
 
         try:
             gridftpwrapper.gridftp_delete(self._handle, url, opAttr._attr, completeCallback, arg)
@@ -1107,7 +1117,9 @@ class FTPClient(object):
         """
 
         if not opAttr:
-            opAttr = OperationAttr()
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
 
         try:
             gridftpwrapper.gridftp_move(self._handle, src, dst, opAttr._attr, completeCallback, arg)
@@ -1157,7 +1169,9 @@ class FTPClient(object):
         """
 
         if not opAttr:
-            opAttr = OperationAttr()
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
 
         try:
             gridftpwrapper.gridftp_chmod(self._handle, url, mode, opAttr._attr, completeCallback, arg)
@@ -1209,7 +1223,9 @@ class FTPClient(object):
 
         """
         if not opAttr:
-            opAttr = OperationAttr()
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
 
         try:
             gridftpwrapper.gridftp_verbose_list(
