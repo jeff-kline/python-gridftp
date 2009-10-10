@@ -50,7 +50,7 @@ class HandleAttr(object):
             ex = GridFTPClientException(msg)
             raise ex
 
-    def __del__(self):
+    def destroy(self):
         """
         Destroy an instance. The wrapped pointer to the Globus C type
         is used by globus_free() to free all the memory associated
@@ -123,7 +123,7 @@ class OperationAttr(object):
             ex = GridFTPClientException(msg)
             raise ex
 
-    def __del__(self):
+    def destroy(self):
         """
         Destroy an instance. The wrapped pointer to the Globus C type
         is used by globus_free() to free all the memory associated
@@ -274,7 +274,7 @@ class Parallelism(object):
             ex = GridFTPClientException(msg)
             raise ex
 
-    def __del__(self):
+    def destroy(self):
         """
         Destroy an instance. The wrapped pointer to the Globus C type
         is used by globus_free() to free all the memory associated
@@ -359,7 +359,7 @@ class TcpBuffer(object):
             ex = GridFTPClientException(msg)
             raise ex
 
-    def __del__(self):
+    def destroy(self):
         """
         Destroy an instance. The wrapped pointer to the Globus C type
         is used by globus_free() to free all the memory associated
@@ -447,7 +447,7 @@ class Buffer(object):
 
         self.size = size
 
-    def __del__(self):
+    def destroy(self):
         """
         Destroy an instance. The wrapped pointer to the Globus C type
         is used by globus_free() to free all the memory associated
@@ -565,7 +565,7 @@ class PerformanceMarkerPlugin(object):
             ex = GridFTPClientException(msg)
             raise ex
 
-    def __del__(self):
+    def destroy(self):
         """
         Destroy an instance. The wrapped pointer to the Globus C type
         is used by globus_free() to free all the memory associated
@@ -618,7 +618,7 @@ class FTPClient(object):
             ex = GridFTPClientException(msg)
             raise ex
 
-    def __del__(self):
+    def destroy(self):
         """
         Destroys an instance. The wrapped pointer to the Globus C type is
         used by globus_free() to free all the memory associated with the C
