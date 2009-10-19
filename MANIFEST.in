@@ -1,3 +1,4 @@
 gridftpClient.py
 gridftpwrapper.c
 setup.py
+include debian/*
