@@ -212,6 +212,14 @@ typedef struct
     PyObject * userarg;     // Python object for the user arg passed in and then passed to the callback Python functions
 } perf_plugin_callback_bucket_t;
 
+// used to store pointers to the Python objects that should
+// be used during a callback for an exists operation
+typedef struct
+{
+    PyObject * pyfunction; // Python object for the Python function to call as callback
+    PyObject * pyarg;      // Python object for the Python argument to pass in to the callback
+} exists_callback_bucket_t;
+
 //
 // This section of the code is for auxiliary functions
 // that are not called directly by the Python module,
@@ -945,6 +953,67 @@ static void perf_plugin_complete_cb(
 
     // release the Python GIL from this thread
     PyGILState_Release(gstate);
+
+    return;
+}
+
+// callback for the completion of exists operation
+static void exists_complete_callback(void * user_data, globus_ftp_client_handle_t * handle, globus_object_t * error) 
+{
+    PyObject * func;
+    PyObject * arglist; 
+    PyObject * result; 
+    PyObject * arg;
+    PyObject * handleObj;
+    PyObject * errorObject;
+
+
+    // cast the user_data that the GridFTP libraries are passing in to the
+    // callback structure where we previously stored the Python function and
+    // arguments to call
+    exists_callback_bucket_t * callbackBucket = (exists_callback_bucket_t *) user_data;
+
+    // we need to obtain the Python GIL before this thread can manipulate any Python object
+    PyGILState_STATE gstate;
+    gstate = PyGILState_Ensure();
+
+    // pick off the function and argument pointers we want to pass back into Python
+    func = callbackBucket -> pyfunction;
+    arg = callbackBucket -> pyarg;
+
+    // create a handle object to pass back into Python
+    handleObj = PyCObject_FromVoidPtr((void *) handle, NULL);
+
+    // create an error object to pass back into Python
+    if (error){
+        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+    } else{
+        errorObject = Py_BuildValue("s", NULL);
+    }
+
+    // prepare the arg list to pass into the Python callback function
+    arglist = Py_BuildValue("(OOO)", arg, handleObj, errorObject);
+
+    // now call the Python callback function
+    result = PyEval_CallObject(func, arglist);
+
+    if (result == NULL) {
+
+        // something went wrong so print to stderr
+        PyErr_Print();
+    }
+
+    // take care of reference handling
+    Py_DECREF(handleObj);
+    Py_DECREF(arglist);
+    Py_XDECREF(result);
+    Py_XDECREF(errorObject);
+
+    // release the Python GIL from this thread
+    PyGILState_Release(gstate);
+
+    // free the space the callback bucket was holding
+    free(callbackBucket);
 
     return;
 }
@@ -2554,6 +2623,75 @@ PyObject * gridftp_handle_remove_plugin(PyObject *self, PyObject *args)
 
 }
 
+// check for existence of a file or directory, i.e. a URL
+// the status is returned in a callback
+PyObject * gridftp_exists(PyObject *self, PyObject *args)
+{
+    globus_ftp_client_handle_t * handlep = NULL;
+    char * url = NULL;
+    globus_ftp_client_operationattr_t * operation_attrp = NULL;
+
+    PyObject * handleObj;
+    PyObject * OpAttrObj;
+    PyObject * completeCallbackFunctionObj;
+    PyObject * completeCallbackArgObj;
+
+    exists_callback_bucket_t * callbackBucket = NULL;
+
+    globus_result_t gridftp_result;
+    char msg[2048] = ""; 
+
+    // get Python arguments
+    if (!PyArg_ParseTuple(args, "OsOOO", 
+            &handleObj, 
+            &url, 
+            &OpAttrObj,
+            &completeCallbackFunctionObj,
+            &completeCallbackArgObj
+            )){
+        PyErr_SetString(PyExc_RuntimeError, "gridftpwrapper: unable to parse arguments");
+        return NULL;
+    }
+ 
+    // get the bare pointers from the python objects
+    handlep = (globus_ftp_client_handle_t *) PyCObject_AsVoidPtr(handleObj);
+    operation_attrp = (globus_ftp_client_operationattr_t *) PyCObject_AsVoidPtr(OpAttrObj);
+
+    // create an exists callback struct to hold the callback information
+    callbackBucket = (exists_callback_bucket_t *) globus_malloc(sizeof(exists_callback_bucket_t));
+    callbackBucket -> pyfunction = completeCallbackFunctionObj;
+    callbackBucket -> pyarg = completeCallbackArgObj;
+
+    // since we are holding pointers to these objects we need to increase
+    // the reference count for each
+    Py_XINCREF(callbackBucket -> pyfunction);
+    Py_XINCREF(callbackBucket -> pyarg);
+
+    // kick off the exists operation
+
+    Py_BEGIN_ALLOW_THREADS
+
+    gridftp_result = globus_ftp_client_exists(
+                        handlep,
+                        url,
+                        operation_attrp,
+                        exists_complete_callback,
+                        (void *) callbackBucket
+                        );
+
+    Py_END_ALLOW_THREADS
+
+    if (gridftp_result != GLOBUS_SUCCESS){
+        sprintf(msg, "gridftpwrapper: rc = %d: unable to start exists operation", gridftp_result);
+        PyErr_SetString(PyExc_RuntimeError, msg);
+        return NULL;
+    }
+
+    // return None to indicate success
+    Py_RETURN_NONE;
+
+}
+
 //
 // This section of the code is for details needed to
 // make this wrapping a Python module.
@@ -2592,6 +2730,7 @@ static PyMethodDef gridftpwrappermethods[] = {
     {"gridftp_delete", gridftp_delete, METH_VARARGS},
     {"gridftp_move", gridftp_move, METH_VARARGS},
     {"gridftp_chmod", gridftp_chmod, METH_VARARGS},
+    {"gridftp_exists", gridftp_exists, METH_VARARGS},
     {"gridftp_get", gridftp_get, METH_VARARGS},
     {"gridftp_verbose_list", gridftp_verbose_list, METH_VARARGS},
     {"gridftp_register_read", gridftp_register_read, METH_VARARGS},

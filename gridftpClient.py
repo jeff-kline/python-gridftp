@@ -1230,6 +1230,53 @@ class FTPClient(object):
             ex = GridFTPClientException(msg)
             raise ex
 
+    def exists(self, url, completeCallback, arg, opAttr = None):
+        """
+        Check for the existence of a file or directory on a remote server.
+
+        When the request is completed or aborted, the completeCallback
+        will be invoked with the final status of the
+        operation.
+
+        The completeCallback must have the form:
+
+        def completeCallback(arg, handle, error):
+            - arg is the user argument passed in when the call was
+              initiated
+            - handle is the wrapper pointer to the client handle
+            - error is None for existence or a string if an error occurred
+
+        @param url: the URL to check for existence
+        @type url: string
+
+        @param completeCallback: the function to be called
+        when the exist operation is complete
+        @type completeCallback: callable
+
+        @param arg: user argument to pass to the callback function
+        @type arg: any
+
+        @param opAttr: an instance of OperationAttr for the source
+        @type opAttr: instance of OperationAttr
+
+        @return: None
+        @rtype: None
+
+        @raise GridFTPClientException: raised if unable to initiate the
+        exists operation
+        """
+
+        if not opAttr:
+            msg = "An OperationAttr instance must be input"
+            ex = GridFTPClientException(msg)
+            raise ex
+
+        try:
+            gridftpwrapper.gridftp_exists(self._handle, url, opAttr._attr, completeCallback, arg)
+        except Exception, e:
+            msg = "Unable to check existence: %s" % e
+            ex = GridFTPClientException(msg)
+            raise ex
             
     def abort(self):
         """
