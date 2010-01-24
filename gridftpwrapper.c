@@ -258,7 +258,7 @@ static void third_party_complete_callback(void * user_data, globus_ftp_client_ha
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -320,7 +320,7 @@ static void cksm_complete_callback(void * user_data, globus_ftp_client_handle_t 
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -381,7 +381,7 @@ static void mkdir_complete_callback(void * user_data, globus_ftp_client_handle_t
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -442,7 +442,7 @@ static void rmdir_complete_callback(void * user_data, globus_ftp_client_handle_t
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -503,7 +503,7 @@ static void delete_complete_callback(void * user_data, globus_ftp_client_handle_
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -564,7 +564,7 @@ static void move_complete_callback(void * user_data, globus_ftp_client_handle_t 
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -625,7 +625,7 @@ static void chmod_complete_callback(void * user_data, globus_ftp_client_handle_t
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -686,7 +686,7 @@ static void get_complete_callback(void * user_data, globus_ftp_client_handle_t *
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -758,7 +758,7 @@ static void get_data_callback(
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
@@ -986,7 +986,7 @@ static void exists_complete_callback(void * user_data, globus_ftp_client_handle_
 
     // create an error object to pass back into Python
     if (error){
-        errorObject = Py_BuildValue("s", globus_object_printable_to_string(error));
+        errorObject = Py_BuildValue("s", globus_error_print_chain(error));
     } else{
         errorObject = Py_BuildValue("s", NULL);
     }
