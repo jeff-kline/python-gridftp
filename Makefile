@@ -19,7 +19,6 @@ MY_CC_OPTS=-bundle -undefined suppress -flat_namespace
 MY_CFLAGS   = $(GLOBUS_INCLUDES) $(GLOBUS_CFLAGS)  $(MY_INC)  
 MY_LDFLAGS  = $(GLOBUS_LDFLAGS)   $(GLOBUS_PKG_LDFLAGS) -fPIC
 MY_LIBS     = $(GLOBUS_LIBS) $(GLOBUS_PKG_LIBS)
-CC=/opt/local/bin/gcc-mp-4.4
 
 %.o: %.c
 	$(CC) $(MY_CFLAGS) -c $< -o $@
