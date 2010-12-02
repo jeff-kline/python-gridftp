@@ -14,8 +14,9 @@ except KeyError:
 
 try:
     processorString = platform.machine()
+    platformString = platform.platform()
 
-    if processorString == 'x86_64':
+    if processorString == 'x86_64' or '64bit' in platformString:
         WORD_SIZE = 64
     else:
         WORD_SIZE = 32
@@ -26,7 +27,6 @@ except Exception, e:
 linkFlags32 = [
 "-L%s/lib" % GLOBUS_LOCATION,
 "-lglobus_ftp_client_gcc32dbgpthr",
-"-lglobus_rls_client_gcc32dbgpthr",
 "-lglobus_ftp_control_gcc32dbgpthr",
 "-lglobus_usage_gcc32dbgpthr",
 "-lglobus_io_gcc32dbgpthr",
@@ -53,14 +53,11 @@ linkFlags32 = [
 linkFlags64 = [
 "-L%s/lib" % GLOBUS_LOCATION,
 "-lglobus_ftp_client_gcc64dbgpthr",
-"-lglobus_rls_client_gcc64dbgpthr",
 "-lglobus_gass_transfer_gcc64dbgpthr",
 "-lglobus_ftp_control_gcc64dbgpthr",
 "-lglobus_usage_gcc64dbgpthr",
 "-lglobus_io_gcc64dbgpthr",
 "-lglobus_xio_gcc64dbgpthr",
-"-lgssapi_error_gcc64dbgpthr",
-"-lglobus_gss_assist_gcc64dbgpthr",
 "-lglobus_gssapi_gsi_gcc64dbgpthr",
 "-lglobus_gsi_proxy_core_gcc64dbgpthr",
 "-lglobus_gsi_credential_gcc64dbgpthr",

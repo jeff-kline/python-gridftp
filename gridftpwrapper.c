@@ -220,6 +220,7 @@ typedef struct
     PyObject * pyarg;      // Python object for the Python argument to pass in to the callback
 } exists_callback_bucket_t;
 
+
 //
 // This section of the code is for auxiliary functions
 // that are not called directly by the Python module,
@@ -764,7 +765,7 @@ static void get_data_callback(
     }
 
     // prepare the arg list to pass into the Python callback function
-    arglist = Py_BuildValue("(OOOlliO)", arg, handleObj, bufferObj, (long) length, (long) offset, (int) eof, errorObject);
+    arglist = Py_BuildValue("(OOOOlli)", arg, handleObj, errorObject, bufferObj, (long) length, (long) offset, (int) eof);
 
     // now call the Python callback function
     result = PyEval_CallObject(func, arglist);
@@ -1017,6 +1018,8 @@ static void exists_complete_callback(void * user_data, globus_ftp_client_handle_
 
     return;
 }
+
+
 
 //
 // This section of the code is for functions called 
@@ -1467,6 +1470,40 @@ PyObject * gridftp_operationattr_set_parallelism(PyObject *self, PyObject *args)
     Py_RETURN_NONE;
 
 }
+
+
+
+// FIXME
+PyObject * gridftp_operationattr_set_disk_stack(PyObject *self, PyObject *args)
+{
+    globus_ftp_client_operationattr_t * operation_attr = NULL;
+    PyObject * opAttr = NULL;
+    char * driver_list="";
+    globus_result_t gridftp_result;
+    char msg[2048] = ""; 
+
+    // get Python arguments
+    if (!PyArg_ParseTuple(args, "Os", &opAttr, &driver_list)){
+        PyErr_SetString(PyExc_RuntimeError, "gridftpwrapper: unable to parse arguments");
+        return NULL;
+    }
+ 
+    operation_attr = (globus_ftp_client_operationattr_t *) PyCObject_AsVoidPtr(opAttr);
+
+    Py_BEGIN_ALLOW_THREADS
+    gridftp_result = globus_ftp_client_operationattr_set_disk_stack(operation_attr, driver_list);
+    Py_END_ALLOW_THREADS
+
+    if (gridftp_result != GLOBUS_SUCCESS){
+        sprintf(msg, "gridftpwrapper: rc = %d: unable to set_disk_stack", gridftp_result);
+        PyErr_SetString(PyExc_RuntimeError, msg);
+        return NULL;
+    }
+    
+    // return None to indicate success
+    Py_RETURN_NONE;
+}
+
 
 // set the tcp buffer for an operation attribute
 PyObject * gridftp_operationattr_set_tcp_buffer(PyObject *self, PyObject *args)
@@ -2692,6 +2729,8 @@ PyObject * gridftp_exists(PyObject *self, PyObject *args)
 
 }
 
+
+
 //
 // This section of the code is for details needed to
 // make this wrapping a Python module.
@@ -2713,6 +2752,7 @@ static PyMethodDef gridftpwrappermethods[] = {
     {"gridftp_operationattr_init", gridftp_operationattr_init, METH_VARARGS},
     {"gridftp_operationattr_destroy", gridftp_operationattr_destroy, METH_VARARGS},
     {"gridftp_operationattr_set_mode", gridftp_operationattr_set_mode, METH_VARARGS},
+    {"gridftp_operationattr_set_disk_stack", gridftp_operationattr_set_disk_stack, METH_VARARGS},
     {"gridftp_operationattr_set_parallelism", gridftp_operationattr_set_parallelism, METH_VARARGS},
     {"gridftp_operationattr_set_tcp_buffer", gridftp_operationattr_set_tcp_buffer, METH_VARARGS},
     {"gridftp_parallelism_init", gridftp_parallelism_init, METH_VARARGS},
@@ -2779,17 +2819,3 @@ void initgridftpwrapper(){
     PyDict_SetItemString(moduleDict, "GLOBUS_FTP_CONTROL_TCPBUFFER_FIXED", Py_BuildValue("i", (int) GLOBUS_FTP_CONTROL_TCPBUFFER_FIXED));
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

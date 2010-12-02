@@ -161,6 +161,19 @@ class OperationAttr(object):
             ex = GridFTPClientException(msg)
             raise ex
 
+    def set_disk_stack(self, driver_list):
+        """
+        Set the disk stack
+
+        FIXME
+        """
+        try:
+            gridftpwrapper.gridftp_operationattr_set_disk_stack(self._attr, driver_list)
+        except Exception, e:
+            msg = "Unable to set mode set disk stack on operation attr: %s" % e
+            ex = GridFTPClientException(msg)
+            raise ex
+
     def set_parallelism(self, parallelism):
         """
         Set the parallelism attribute for an ftp client
@@ -739,6 +752,8 @@ class FTPClient(object):
             msg = "Unable to initiate third party transfer: %s" % e
             ex = GridFTPClientException(msg)
             raise ex
+
+
 
     def get(self, url, completeCallback, arg, opAttr = None, marker = None):
         """
