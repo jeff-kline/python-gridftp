@@ -161,11 +161,55 @@ class OperationAttr(object):
             ex = GridFTPClientException(msg)
             raise ex
 
+
     def set_disk_stack(self, driver_list):
         """
-        Set the disk stack
+        Set the disk stack. FIXME: documentation.
 
-        FIXME
+        An example test client:
+
+        # BEGIN
+        import gridftpClient
+        import threading
+        import sys
+        
+        def transfer_done(arg, handle, error):
+            theCondition = arg
+            theCondition.acquire()
+            if error:
+                print "Callback: error is %s" % error
+                sys.stdout.flush()
+            else:
+                print "Callback: transfer is done"
+                sys.stdout.flush()
+            theCondition.notify()
+            theCondition.release()
+            
+                
+        def transfer_read(mydict, handle, error, buffer, length, offset, eof):
+        mydict['buffer_string']+=str(buffer)
+        if eof:
+            print  mydict['buffer_string']
+        else:
+            mydict['client_handle'].register_read(myBuffer,transfer_read,mydict) #FIXME
+
+        h = gridftpClient.HandleAttr()
+        opAttr = gridftpClient.OperationAttr()
+        opAttr.set_disk_stack("popen:argv=#/bin/df#-ih")
+        myClient = gridftpClient.FTPClient(h)
+        myBuffer =gridftpClient.Buffer(1024)
+        src = "gsiftp://oregano.phys.uwm.edu"
+        myCondition = threading.Condition()
+        myCondition.acquire()
+        myClient.get(src,transfer_done,myCondition,opAttr,None)
+        mydict={'client_handle': myClient, 'buffer_string': ""}
+        myClient.register_read(myBuffer,transfer_read,mydict) #FIXME
+        print "Starting to wait..."
+        sys.stdout.flush()
+        myCondition.wait()
+        print "Done waiting!"
+        sys.stdout.flush()
+
         """
         try:
             gridftpwrapper.gridftp_operationattr_set_disk_stack(self._attr, driver_list)
@@ -834,14 +878,14 @@ class FTPClient(object):
 
         The dataCallback function must have the form:
 
-        def dataCallback(arg, handle, buffer, length, offset, eof, error):
+        def dataCallback(arg, handle, error, buffer, length, offset, eof):
             - arg is the user argument passed in when this function is called
             - handle is the wrapped pointer to the client handle
+            - error is None or a string if there is an error
             - buffer is the buffer from which the data can be read
             - length is the number of bytes in the buffer
             - offset is the offset into the file at which the bytes start
             - eof is true if this is the end of the file
-            - error is None or a string if there is an error
 
         @param buffer: instance of class Buffer into which the data will be
         written
@@ -985,6 +1029,52 @@ class FTPClient(object):
             msg = "Unable to mkdir: %s" % e
             ex = GridFTPClientException(msg)
             raise ex
+    def popen(self, server, cmd, cmd_args):
+        """
+        Call 'popen' on server.
+        server: name of server
+        cmd: command to issue on server
+        cmd_args: arguments to pass to cmd
+
+        print output of cmd cmdargs run on server to fh
+        """
+
+        def transfer_done(arg, handle, error):
+            """
+            complete callback function
+            """
+            theCondition = arg
+            theCondition.acquire()
+            if error:
+                print "Callback: error is %s" % error
+                sys.stdout.flush()
+            else:
+                pass
+            theCondition.notify()
+            theCondition.release()
+            
+        def transfer_read(mydict, handle, error, buff, length, offset, eof):
+            """
+            datacallback function
+            """
+            mydict['buffer_string']+=str(buff)
+            if not eof:
+                self.register_read(mydict['my_buffer'], transfer_read, mydict) 
+        
+        import threading
+        myCondition = threading.Condition()
+        myCondition.acquire()
+
+        opAttr = OperationAttr()
+        disk_stack='#'.join(["popen:argv=",cmd]+cmd_args)
+        opAttr.set_disk_stack(disk_stack)
+        buffer = Buffer(1024)
+        self.get(server, transfer_done, myCondition, opAttr, None)
+        mydict={'client_handle': self, 'buffer_string': "", 'my_buffer': buffer}
+        self.register_read(buffer, transfer_read, mydict)
+        myCondition.wait()
+        return mydict['buffer_string']
+
 
     def rmdir(self, url, completeCallback, arg, opAttr = None):
         """

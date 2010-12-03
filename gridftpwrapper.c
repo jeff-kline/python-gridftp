@@ -1046,7 +1046,7 @@ PyObject * gridftp_modules_activate(PyObject * self, PyObject * args)
         Py_END_ALLOW_THREADS
 
         if (rc != GLOBUS_SUCCESS) {
-            fprintf(stderr, "gridftpwrapper: unable to activate Globus module");        
+	  PyErr_SetString(PyExc_RuntimeError, "gridftpwrapper: unable to activate Globus module");
         }
     }
 
