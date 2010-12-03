@@ -999,6 +999,25 @@ class FTPClient(object):
         return a string, viz. the contents of whatever register_read returns.
 
         raises GridFTPClientException
+
+        Example use:
+
+          import gridftpClient
+          import os,sys
+          
+          cmd='/bin/df'
+          cmd_args=['-ih', '/opt']
+          server = "gsiftp://oregano.phys.uwm.edu"
+          h = gridftpClient.HandleAttr()
+          myClient = gridftpClient.FTPClient(h)
+          outstr=myClient.popen(server, cmd, cmd_args)
+          print outstr
+
+        results in the following output:
+
+          Filesystem            Inodes   IUsed   IFree IUse% Mounted on
+          /dev/sdb1                47M    4.4K     47M    1% /opt
+  
         """
 
         def transfer_done(arg, handle, error):
