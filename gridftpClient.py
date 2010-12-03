@@ -164,52 +164,11 @@ class OperationAttr(object):
 
     def set_disk_stack(self, driver_list):
         """
-        Set the disk stack. FIXME: documentation.
+        Set the disk stack. 
 
-        An example test client:
+        driver_list: a string, for example "popen:argv=#/bin/df#-ih"
 
-        # BEGIN
-        import gridftpClient
-        import threading
-        import sys
-        
-        def transfer_done(arg, handle, error):
-            theCondition = arg
-            theCondition.acquire()
-            if error:
-                print "Callback: error is %s" % error
-                sys.stdout.flush()
-            else:
-                print "Callback: transfer is done"
-                sys.stdout.flush()
-            theCondition.notify()
-            theCondition.release()
-            
-                
-        def transfer_read(mydict, handle, error, buffer, length, offset, eof):
-        mydict['buffer_string']+=str(buffer)
-        if eof:
-            print  mydict['buffer_string']
-        else:
-            mydict['client_handle'].register_read(myBuffer,transfer_read,mydict) #FIXME
-
-        h = gridftpClient.HandleAttr()
-        opAttr = gridftpClient.OperationAttr()
-        opAttr.set_disk_stack("popen:argv=#/bin/df#-ih")
-        myClient = gridftpClient.FTPClient(h)
-        myBuffer =gridftpClient.Buffer(1024)
-        src = "gsiftp://oregano.phys.uwm.edu"
-        myCondition = threading.Condition()
-        myCondition.acquire()
-        myClient.get(src,transfer_done,myCondition,opAttr,None)
-        mydict={'client_handle': myClient, 'buffer_string': ""}
-        myClient.register_read(myBuffer,transfer_read,mydict) #FIXME
-        print "Starting to wait..."
-        sys.stdout.flush()
-        myCondition.wait()
-        print "Done waiting!"
-        sys.stdout.flush()
-
+        For an example of set_disk_stack in context, see the method FTPClient.popen()
         """
         try:
             gridftpwrapper.gridftp_operationattr_set_disk_stack(self._attr, driver_list)
@@ -1029,15 +988,17 @@ class FTPClient(object):
             msg = "Unable to mkdir: %s" % e
             ex = GridFTPClientException(msg)
             raise ex
-    def popen(self, server, cmd, cmd_args):
+    def popen(self, server, cmd, cmd_args, buff_size=1024):
         """
         Call 'popen' on server.
 
-        server: name of server
-        cmd: command to issue on server
-        cmd_args: arguments to pass to cmd
+        server (string): name of server. Example: 'gsiftp://oregano.phys.uwm.edu'
+        cmd (string): command to issue on server. Example: '/bin/df'
+        cmd_args (list of strings): list of arguments to pass to cmd. Example: ['-i', '/opt']
 
-        return a string, viz. the contents of whatever register_read returns
+        return a string, viz. the contents of whatever register_read returns.
+
+        raises GridFTPClientException
         """
 
         def transfer_done(arg, handle, error):
@@ -1070,7 +1031,7 @@ class FTPClient(object):
             opAttr = OperationAttr()
             disk_stack='#'.join(["popen:argv=",cmd]+cmd_args)
             opAttr.set_disk_stack(disk_stack)
-            buffer = Buffer(1024)
+            buffer = Buffer(buff_size)
             self.get(server, transfer_done, myCondition, opAttr, None)
             mydict={'client_handle': self, 'buffer_string': "", 'my_buffer': buffer}
             self.register_read(buffer, transfer_read, mydict)
