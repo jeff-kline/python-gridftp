@@ -1003,7 +1003,6 @@ class FTPClient(object):
         Example use:
 
           import gridftpClient
-          import os,sys
           
           cmd='/bin/df'
           cmd_args=['-ih', '/opt']
