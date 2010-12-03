@@ -1032,11 +1032,12 @@ class FTPClient(object):
     def popen(self, server, cmd, cmd_args):
         """
         Call 'popen' on server.
+
         server: name of server
         cmd: command to issue on server
         cmd_args: arguments to pass to cmd
 
-        print output of cmd cmdargs run on server to fh
+        return a string, viz. the contents of whatever register_read returns
         """
 
         def transfer_done(arg, handle, error):
@@ -1060,19 +1061,24 @@ class FTPClient(object):
             mydict['buffer_string']+=str(buff)
             if not eof:
                 self.register_read(mydict['my_buffer'], transfer_read, mydict) 
-        
-        import threading
-        myCondition = threading.Condition()
-        myCondition.acquire()
 
-        opAttr = OperationAttr()
-        disk_stack='#'.join(["popen:argv=",cmd]+cmd_args)
-        opAttr.set_disk_stack(disk_stack)
-        buffer = Buffer(1024)
-        self.get(server, transfer_done, myCondition, opAttr, None)
-        mydict={'client_handle': self, 'buffer_string': "", 'my_buffer': buffer}
-        self.register_read(buffer, transfer_read, mydict)
-        myCondition.wait()
+        try:
+            import threading
+            myCondition = threading.Condition()
+            myCondition.acquire()
+    
+            opAttr = OperationAttr()
+            disk_stack='#'.join(["popen:argv=",cmd]+cmd_args)
+            opAttr.set_disk_stack(disk_stack)
+            buffer = Buffer(1024)
+            self.get(server, transfer_done, myCondition, opAttr, None)
+            mydict={'client_handle': self, 'buffer_string': "", 'my_buffer': buffer}
+            self.register_read(buffer, transfer_read, mydict)
+            myCondition.wait()
+        except Exception, e:
+            msg = "problem with popen: %s" %e
+            ex = GridFTPClientException(msg)
+            raise ex
         return mydict['buffer_string']
 
 
