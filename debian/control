@@ -2,12 +2,12 @@ Source: python-gridftp
 Section: python
 Priority: extra
 Maintainer: Scott Koranda <skoranda@gravity.phys.uwm.edu>
-Build-Depends: debhelper (>= 7), python-all-dev (>= 2.5.2-3), python-support (>= 0.8.4), ldr-globus (>= 4.2.1)
+Build-Depends: debhelper (>= 7), python-all-dev (>= 2.5.2-3), python-support (>= 0.8.4), vdt-globus-dev (>= 5.0.2)
 Standards-Version: 3.7.3
 Homepage: http://www.lsc-group.phys.uwm.edu/LDR
 
 Package: python-gridftp
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, ldr-globus(>= 4.2.1)
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, vdt-globus-gridftp-server (>= 5.0.2), vdt-globus-gridftp-client (>= 5.0.2)
 Description: Python Globus GridFTP client bindings
  Python Globus GridFTP client bindings

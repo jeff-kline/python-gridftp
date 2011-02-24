@@ -1,3 +1,9 @@
+python-gridftp (1.2.0-1) unstable; urgency=low
+
+  * Support for popen functionality 
+
+ -- Scott Koranda <skoranda@gravity.phys.uwm.edu>  Wed, 23 Feb 2011 22:12:01 -0600
+
 python-gridftp (1.1.0-1) unstable; urgency=low
 
   * Support for 'exists' and better destruction of handles. 

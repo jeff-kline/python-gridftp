@@ -91,7 +91,7 @@ e = Extension(
 extModList = [e]
 
 setup(name="python-gridftp",
-      version="1.1.0",
+      version="1.2.0",
       description="Python GridFTP client bindings",
       author="Scott Koranda",
       author_email="ldr-lsc@gravity.phys.uwm.edu",
