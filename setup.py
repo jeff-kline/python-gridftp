@@ -3,14 +3,7 @@ import sys
 import platform
 from distutils.core import setup, Extension
 
-GLOBUS_LOCATION = None
 WORD_SIZE = None
-
-try:
-    GLOBUS_LOCATION = os.environ["GLOBUS_LOCATION"]
-except KeyError:
-    print >> sys.stderr, "GLOBUS_LOCATION must be set before building gridftpClient"
-    sys.exit(-1)
 
 try:
     processorString = platform.machine()
@@ -25,54 +18,51 @@ except Exception, e:
     sys.exit(-1)
 
 linkFlags32 = [
-"-L%s/lib" % GLOBUS_LOCATION,
-"-lglobus_ftp_client_gcc32dbgpthr",
-"-lglobus_ftp_control_gcc32dbgpthr",
-"-lglobus_usage_gcc32dbgpthr",
-"-lglobus_io_gcc32dbgpthr",
-"-lglobus_xio_gcc32dbgpthr",
-"-lgssapi_error_gcc32dbgpthr",
-"-lglobus_gss_assist_gcc32dbgpthr",
-"-lglobus_gssapi_gsi_gcc32dbgpthr",
-"-lglobus_gsi_proxy_core_gcc32dbgpthr",
-"-lglobus_gsi_credential_gcc32dbgpthr",
-"-lglobus_gsi_callback_gcc32dbgpthr",
-"-lglobus_oldgaa_gcc32dbgpthr",
-"-lglobus_gsi_sysconfig_gcc32dbgpthr",
-"-lglobus_gsi_cert_utils_gcc32dbgpthr",
-"-lglobus_openssl_gcc32dbgpthr",
-"-lglobus_openssl_error_gcc32dbgpthr",
-"-lglobus_callout_gcc32dbgpthr",
-"-lglobus_proxy_ssl_gcc32dbgpthr",
-"-lglobus_common_gcc32dbgpthr",
+"-lglobus_ftp_client",
+"-lglobus_ftp_control",
+"-lglobus_usage",
+"-lglobus_io",
+"-lglobus_xio",
+"-lgssapi_error",
+"-lglobus_gss_assist",
+"-lglobus_gssapi_gsi",
+"-lglobus_gsi_proxy_core",
+"-lglobus_gsi_credential",
+"-lglobus_gsi_callback",
+"-lglobus_oldgaa",
+"-lglobus_gsi_sysconfig",
+"-lglobus_gsi_cert_utils",
+"-lglobus_openssl",
+"-lglobus_openssl_error",
+"-lglobus_callout",
+"-lglobus_proxy_ssl",
+"-lglobus_common",
 "-lssl",
 "-lcrypto",
-"-lltdl_gcc32dbgpthr",
+"-lltdl",
 ]
 
 linkFlags64 = [
-"-L%s/lib" % GLOBUS_LOCATION,
-"-lglobus_ftp_client_gcc64dbgpthr",
-"-lglobus_gass_transfer_gcc64dbgpthr",
-"-lglobus_ftp_control_gcc64dbgpthr",
-"-lglobus_usage_gcc64dbgpthr",
-"-lglobus_io_gcc64dbgpthr",
-"-lglobus_xio_gcc64dbgpthr",
-"-lglobus_gssapi_gsi_gcc64dbgpthr",
-"-lglobus_gsi_proxy_core_gcc64dbgpthr",
-"-lglobus_gsi_credential_gcc64dbgpthr",
-"-lglobus_gsi_callback_gcc64dbgpthr",
-"-lglobus_oldgaa_gcc64dbgpthr",
-"-lglobus_gsi_sysconfig_gcc64dbgpthr",
-"-lglobus_gsi_cert_utils_gcc64dbgpthr",
-"-lglobus_openssl_gcc64dbgpthr",
-"-lglobus_openssl_error_gcc64dbgpthr",
-"-lglobus_callout_gcc64dbgpthr",
-"-lglobus_proxy_ssl_gcc64dbgpthr",
-"-lglobus_common_gcc64dbgpthr",
+"-lglobus_ftp_client",
+"-lglobus_ftp_control",
+"-lglobus_usage",
+"-lglobus_io",
+"-lglobus_xio",
+"-lglobus_gssapi_gsi",
+"-lglobus_gsi_proxy_core",
+"-lglobus_gsi_credential",
+"-lglobus_gsi_callback",
+"-lglobus_oldgaa",
+"-lglobus_gsi_sysconfig",
+"-lglobus_gsi_cert_utils",
+"-lglobus_openssl",
+"-lglobus_openssl_error",
+"-lglobus_callout",
+"-lglobus_proxy_ssl",
+"-lglobus_common",
 "-lssl",
 "-lcrypto",
-"-lltdl_gcc64dbgpthr",
+"-lltdl",
 ]
 
 if WORD_SIZE == 64:
@@ -83,7 +73,7 @@ else:
 e = Extension(
         "gridftpwrapper",
         ["gridftpwrapper.c"],
-        include_dirs=[ "%s/include/gcc%ddbgpthr" % (GLOBUS_LOCATION, WORD_SIZE) ],
+        include_dirs=[ "/usr/include/globus", "/usr/lib/globus/include" ],
         extra_compile_args=["-O0", "-Wno-strict-prototypes" ],
         extra_link_args=linkFlags
         )
