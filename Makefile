@@ -6,18 +6,20 @@
 #
 #
 
-
 include ./makefile_header
 TARGET=gridftpwrapper.so
-MY_INC=-I/opt/local/Library/Frameworks/Python.framework/Versions/2.6/include/python2.6 
+MY_INC=-I/usr/include/python2.6 
+OS=$(shell uname)
 
-# For use on mac:
-MY_CC_OPTS=-bundle -undefined suppress -flat_namespace
-# For use on Linux:
-# MY_CC_OPTS=-shared
+ifeq ($(OS),Darwin)
+	MY_CC_OPTS=-bundle -undefined suppress -flat_namespace
+endif
+ifeq ($(OS),Linux)
+	MY_CC_OPTS=-shared
+endif
 
-MY_CFLAGS   = $(GLOBUS_INCLUDES) $(GLOBUS_CFLAGS)  $(MY_INC)  
-MY_LDFLAGS  = $(GLOBUS_LDFLAGS)   $(GLOBUS_PKG_LDFLAGS) -fPIC
+MY_CFLAGS   = $(GLOBUS_INCLUDES) $(GLOBUS_CFLAGS) $(MY_INC) -fPIC 
+MY_LDFLAGS  = $(GLOBUS_LDFLAGS)   $(GLOBUS_PKG_LDFLAGS) -lpython2.6 -fPIC
 MY_LIBS     = $(GLOBUS_LIBS) $(GLOBUS_PKG_LIBS)
 
 %.o: %.c

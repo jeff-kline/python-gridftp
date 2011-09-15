@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <string.h>
+#include "Python.h"
 #include <unistd.h>
 #include <ctype.h>
 
@@ -12,7 +11,6 @@
 
 #include "globus_ftp_control.h"
 
-#include "Python.h"
 
 // Some notes about threads
 // 
