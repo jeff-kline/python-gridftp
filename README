@@ -1,15 +1,9 @@
-For development work, it is easiest to simply do
-
-make
-
-and let the Makefile build the shared object and related files. 
-
-You MUST generate makefile_header for the Globus installation you are 
-using for development by doing
+Prior to compiling, first generate "makefile_header" for the Globus
+installation you are using for development by doing
 
 globus-makefile-header --flavor=FLAVOR > makefile_header
 
-where FLAVOR is the target flavor you are building, for
+where FLAVOR is the target flavor you are building. For
 example
 
 globus-makefile-header --flavor=gcc64dbgpthr > makefile_header
@@ -23,6 +17,3 @@ distribution in the dist directory.
 
 3) The tarball can be installed directly by doing 
 'python setup.py install' inside of it.
-
-
-
