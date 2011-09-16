@@ -22,7 +22,7 @@ build-stamp: configure-stamp
 clean: 
 	dh_testdir
 	for python in $(PYVERS); do \
-		python=$$(echo $$python | sed "s/$(PYDEV)/python/"); \
+		python=$$(echo $$python | sed "s/$(PYDEF)/python/"); \
 		$$python setup.py clean; \
 	done
 	rm -f build-stamp configure-stamp
