@@ -34,7 +34,14 @@ all: $(TARGET)
 	$(CC) $(MY_CC_OPTS) -o $@ $< $(MY_LDFLAGS) $(MY_LIBS)
 
 clean:
-	$(RM) -r *.so *.o *.pyc dist $(RPMDIR)/*/$(SRCNAME)* $(RPMDIR)/*/*/$(SRCNAME)*
+	$(RM) -r *.so\
+		 *.o\
+		 *.pyc\
+		 $(RPMDIR)/*/$(SRCNAME)*\
+		 $(RPMDIR)/*/*/$(SRCNAME)*\
+		 build\
+		 dist\
+		 MANIFEST
 
 srpm: clean
 	cp $(SRCNAME).spec $(RPMDIR)/SPECS/
