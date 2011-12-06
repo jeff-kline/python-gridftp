@@ -1,5 +1,3 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-
 Summary: Python GridFTP wrappings for LIGO
 Vendor: UWM LIGO Group
 Name: python-gridftp
@@ -41,7 +39,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files 
 %defattr(-,root,root)
-%{python_sitelib}
+%{python_sitearch}
 
 %changelog
 * Fri Dec 02 2011 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.3.0-1
