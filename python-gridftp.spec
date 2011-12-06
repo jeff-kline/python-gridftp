@@ -14,7 +14,7 @@ Source0: %{name}-%{version}.tar.gz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 
-BuildRequires: python >= 2.6.6, 
+BuildRequires: python >= 2.6.6, python-devel, globus-ftp-client-devel, globus-gass-transfer-devel, globus-usage-devel
 
 Requires: python >= 2.6.6, 
 

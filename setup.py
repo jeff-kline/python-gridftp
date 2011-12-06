@@ -24,6 +24,11 @@ except Exception, e:
     print >> sys.stderr, "Unable to determine if using x86_64 processor"
     sys.exit(-1)
 
+if platform.dist()[0] == 'debian':
+        my_include_dirs=[ "/usr/include/globus", "/usr/lib/globus/include" ]
+else:
+        my_include_dirs=[ "/usr/include/globus", "/usr/lib64/globus/include" ]
+    
 linkFlags32 = [
 "-L%s/lib" % GLOBUS_LOCATION,
 "-lglobus_ftp_client_gcc32dbgpthr",
@@ -51,28 +56,28 @@ linkFlags32 = [
 ]
 
 linkFlags64 = [
-"-L%s/lib" % GLOBUS_LOCATION,
-"-lglobus_ftp_client_gcc64dbgpthr",
-"-lglobus_gass_transfer_gcc64dbgpthr",
-"-lglobus_ftp_control_gcc64dbgpthr",
-"-lglobus_usage_gcc64dbgpthr",
-"-lglobus_io_gcc64dbgpthr",
-"-lglobus_xio_gcc64dbgpthr",
-"-lglobus_gssapi_gsi_gcc64dbgpthr",
-"-lglobus_gsi_proxy_core_gcc64dbgpthr",
-"-lglobus_gsi_credential_gcc64dbgpthr",
-"-lglobus_gsi_callback_gcc64dbgpthr",
-"-lglobus_oldgaa_gcc64dbgpthr",
-"-lglobus_gsi_sysconfig_gcc64dbgpthr",
-"-lglobus_gsi_cert_utils_gcc64dbgpthr",
-"-lglobus_openssl_gcc64dbgpthr",
-"-lglobus_openssl_error_gcc64dbgpthr",
-"-lglobus_callout_gcc64dbgpthr",
-"-lglobus_proxy_ssl_gcc64dbgpthr",
-"-lglobus_common_gcc64dbgpthr",
+"-L%s/lib64" % GLOBUS_LOCATION,
+"-lglobus_ftp_client",
+"-lglobus_gass_transfer",
+"-lglobus_ftp_control",
+"-lglobus_usage",
+"-lglobus_io",
+"-lglobus_xio",
+"-lglobus_gssapi_gsi",
+"-lglobus_gsi_proxy_core",
+"-lglobus_gsi_credential",
+"-lglobus_gsi_callback",
+"-lglobus_oldgaa",
+"-lglobus_gsi_sysconfig",
+"-lglobus_gsi_cert_utils",
+"-lglobus_openssl",
+"-lglobus_openssl_error",
+"-lglobus_callout",
+"-lglobus_proxy_ssl",
+"-lglobus_common",
 "-lssl",
 "-lcrypto",
-"-lltdl_gcc64dbgpthr",
+"-lltdl",
 ]
 
 if WORD_SIZE == 64:
@@ -83,7 +88,7 @@ else:
 e = Extension(
         "gridftpwrapper",
         ["gridftpwrapper.c"],
-        include_dirs=[ "%s/include/gcc%ddbgpthr" % (GLOBUS_LOCATION, WORD_SIZE) ],
+        include_dirs=my_include_dirs,
         extra_compile_args=["-O0", "-Wno-strict-prototypes" ],
         extra_link_args=linkFlags
         )
