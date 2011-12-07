@@ -61,7 +61,4 @@ srpm: clean
 		 --exclude-vcs\
 		 .
 	gzip $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar
-
-# Scientific Linux rpm build
-rpm: srpm
-	GLOBUS_LOCATION=$(GLOBUS_LOCATION) rpmbuild -ba $(RPMDIR)/SPECS/$(SRCNAME).spec
+	rpmbuild -bs $(RPMDIR)/SPECS/$(SRCNAME).spec

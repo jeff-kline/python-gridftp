@@ -3,14 +3,13 @@ import sys
 import platform
 from distutils.core import setup, Extension
 
-GLOBUS_LOCATION = None
+GLOBUS_LOCATION = "/usr"
 WORD_SIZE = None
 
 try:
     GLOBUS_LOCATION = os.environ["GLOBUS_LOCATION"]
 except KeyError:
-    print >> sys.stderr, "GLOBUS_LOCATION must be set before building gridftpClient"
-    sys.exit(-1)
+    print >> sys.stderr, "GLOBUS_LOCATION is not set; using default %s" %(GLOBUS_LOCATION)
 
 try:
     processorString = platform.machine()
