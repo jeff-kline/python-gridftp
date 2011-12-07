@@ -62,3 +62,7 @@ srpm: clean
 		 .
 	gzip $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar
 	rpmbuild -bs $(RPMDIR)/SPECS/$(SRCNAME).spec
+
+rpm:
+	rpmbuild -ba $(RPMDIR)/SPECS/$(SRCNAME).spec
+
