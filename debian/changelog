@@ -1,12 +1,20 @@
-python-gridftp (1.1.0-1) unstable; urgency=low
+python-gridftp (1.3.0-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * support for building on squeeze
+  * added correct dependencies on globus
+
+ -- Jeffery Kline <kline@gravity.phys.uwm.edu>  Thu, 08 Dec 2011 10:24:23 -0600
+
+python-gridftp (1.1.0-1.1) unstable; urgency=low
 
   * Support for 'exists' and better destruction of handles. 
 
  -- Scott Koranda <skoranda@gravity.phys.uwm.edu>  Mon, 19 Oct 2009 15:10:17 -0500
 
-python-gridftp (1.0.0-1) unstable; urgency=low
+python-gridftp (1.0.0-1.1) unstable; urgency=low
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * Initial release 
 
  -- Scott Koranda <skoranda@gravity.phys.uwm.edu>  Mon, 08 Jun 2009 18:40:50 -0500
 
