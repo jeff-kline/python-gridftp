@@ -8,6 +8,6 @@ Homepage: https://wiki.ligo.org/LDG/DASWG/LIGODataReplicator
 
 Package: python-gridftp
 Architecture: any
-Depends: python (>= 2.6.6), ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Depends: python (>= 2.6.6), ${shlibs:Depends}, ${misc:Depends}
 Description: Python Globus GridFTP client bindings
  Bindings for Python Globus GridFTP client, written in C as python module

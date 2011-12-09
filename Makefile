@@ -49,10 +49,11 @@ srpm: clean
 	# create the tar.gz file 
 	#
 	tar -cf\
-		 $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar\
-		 --transform=s/\./$(SRCNAME)-$(VERSION)/\
-		 --exclude-vcs\
-		 .
+		$(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar\
+		--transform=s/\./$(SRCNAME)-$(VERSION)/\
+		--exclude-vcs\
+		--exclude='.*.swp'\
+		.
 	gzip $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar
 	#
 	# build the source from the specfile
@@ -72,6 +73,7 @@ deb: clean
 		../$(SRCNAME)_$(VERSION).orig.tar\
 		--transform=s/\./$(SRCNAME)_$(VERSION)/\
 		--exclude-vcs\
+		--exclude='.*.swp'\
 		.
 	gzip ../$(SRCNAME)_$(VERSION).orig.tar
 	debuild -rfakeroot -D -uc -us
