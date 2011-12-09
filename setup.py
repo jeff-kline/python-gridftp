@@ -10,12 +10,6 @@ try:
 except KeyError:
     print >> sys.stderr, "GLOBUS_LOCATION is not set; using default %s" %(GLOBUS_LOCATION)
 
-try:
-    platformString = platform.platform()
-except Exception, e:
-    print >> sys.stderr, "Unable to determine if using x86_64 processor"
-    sys.exit(-1)
-
 if platform.dist()[0] == 'debian':
         my_include_dirs=[ "/usr/include/globus", "/usr/lib/globus/include" ]
 else:

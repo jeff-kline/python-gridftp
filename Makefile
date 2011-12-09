@@ -1,16 +1,3 @@
-#!/usr/bin/make -f
-# to build python-gridftp by hand in this dir, do
-#   make all
-#
-# to clean the dir do
-#   make clean
-#
-# to build python-gridftp rpms for Scientific Linux, do
-#   make rpm
-#
-# to build python-gridftp srpms for Scientific Linux, do
-#   make srpm
-
 RPMDIR=$(HOME)/rpmbuild
 VERSION=1.3.0
 SRCNAME=python-gridftp
@@ -23,7 +10,7 @@ all:
 	@echo
 	@echo "all: print this message"
 	@echo "clean: remove stuff"
-	@echo "install: python setup.py install --root=debian/python-gridftp --prefix=/usr"
+	@echo "install: python setup.py install --root=debian/$(SRCNAME) --prefix=/usr"
 	@echo "srpm: clean and then build the source rpm"
 	@echo "rpm: clean and then build the rpm and source rpm"
 	@echo "deb: create an orig.tar.gz file and run debuild -uc -us"
@@ -43,14 +30,14 @@ clean:
 		build\
 		dist\
 		MANIFEST\
-		debian/python-gridftp\
-		debian/python-gridftp.*.log\
-		debian/python-gridftp.*.debhelper\
-		debian/python-gridftp.substvars\
+		debian/$(SRCNAME)\
+		debian/$(SRCNAME).*.log\
+		debian/$(SRCNAME).*.debhelper\
+		debian/$(SRCNAME).substvars\
 		debian/files
 
 install:
-	python setup.py install --root=debian/python-gridftp --prefix=/usr
+	python setup.py install --root=debian/$(SRCNAME) --prefix=/usr
 
 # Scientific Linux source rpm
 srpm: clean
