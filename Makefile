@@ -54,16 +54,28 @@ install:
 
 # Scientific Linux source rpm
 srpm: clean
+	#
+	# copy the local specfile to the necessary place
+	#
 	cp $(SRCNAME).spec $(RPMDIR)/SPECS/
+	# 
+	# create the tar.gz file 
+	#
 	tar -cf\
 		 $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar\
 		 --transform=s/\./$(SRCNAME)-$(VERSION)/\
 		 --exclude-vcs\
 		 .
 	gzip $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar
+	#
+	# build the source from the specfile
+	# 
 	rpmbuild -bs $(RPMDIR)/SPECS/$(SRCNAME).spec
 
 rpm: srpm
+	#
+	# build all
+	# 
 	rpmbuild -ba $(RPMDIR)/SPECS/$(SRCNAME).spec
 
 # debian commands to build deb files
