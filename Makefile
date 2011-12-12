@@ -37,7 +37,7 @@ clean:
 		debian/files
 
 install:
-	python setup.py install --root=debian/$(SRCNAME) --prefix=/usr
+	python setup.py install --root=${DESTDIR} --prefix=/usr
 
 # Scientific Linux source rpm
 srpm: clean
@@ -52,7 +52,6 @@ srpm: clean
 		$(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar\
 		--transform=s/\./$(SRCNAME)-$(VERSION)/\
 		--exclude-vcs\
-		--exclude='.*.swp'\
 		.
 	gzip $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar
 	#
@@ -73,7 +72,6 @@ deb: clean
 		../$(SRCNAME)_$(VERSION).orig.tar\
 		--transform=s/\./$(SRCNAME)_$(VERSION)/\
 		--exclude-vcs\
-		--exclude='.*.swp'\
 		.
 	gzip ../$(SRCNAME)_$(VERSION).orig.tar
 	debuild -rfakeroot -D -uc -us
