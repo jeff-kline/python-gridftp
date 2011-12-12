@@ -1,56 +1,36 @@
-Summary: Python GridFTP wrappings for LIGO
-Vendor: UWM LIGO Group
-Name: python-gridftp
-Packager: Jeff Kline <kline@gravity.phys.uwm.edu>
+%define name python-gridftp
+%define version 1.3.0
+%define unmangled_version 1.3.0
+%define release 1
+
+Summary: Python Globus GridFTP client bindings
+Name: %{name}
+Version: %{version}
+Release: %{release}
+Source0: %{name}-%{unmangled_version}.tar.gz
 License: GPL
-Version: 1.3.0
-Release: 1
-URL: http://www.lsc-group.phys.uwm.edu
-Group: Applications/Internet
-
-Source0: %{name}-%{version}.tar.gz
-
-BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-
-BuildRequires: python >= 2.6.6, python-devel >= 2.6.6, globus-ftp-client-devel >= 6.0
-
-Requires: python >= 2.6.6, globus-ftp-client >= 6.0
-
-
-AutoReq: no
-AutoProv: no
-
-%define debug_package %{nil}
+Group: Development/Libraries
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Prefix: %{_prefix}
+Vendor: Scott Koranda, Jeff Kline <ldr-lsc@gravity.phys.uwm.edu>
+Url: https://wiki.ligo.org/LDG/DASWG/LIGODataReplicator
+BuildRequires: python-devel, python-setuptools, globus-ftp-client-devel >= 6.0
+Requires: python, globus-ftp-client
 
 %description
 Python GridFTP wrappings for LIGO
 
 %prep
-%setup
-%{__python} setup.py build
+%setup -n %{name}-%{unmangled_version}
+
+%build
+env CFLAGS="$RPM_OPT_FLAGS" python setup.py build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
+python setup.py install -O1 --root=$RPM_BUILD_ROOT --record=INSTALLED_FILES
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-
-%files 
+%files -f INSTALLED_FILES
 %defattr(-,root,root)
-%{python_sitearch}
-
-%changelog
-* Fri Dec 02 2011 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.3.0-1
-- Support for natively packaged Globus 
-
-* Wed Feb 23 2011 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.2.0-1
-- Support for popen functionality 
-
-* Mon Oct 19 2009 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.1.0-1
-- Support for 'exists' and better destruction of handles. 
-
-* Mon Jun 08 2009 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.0.0-1
-- Initial release
