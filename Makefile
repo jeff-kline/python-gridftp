@@ -1,16 +1,28 @@
-RPMDIR=$(HOME)/rpmbuild
-VERSION=1.3.0
-SRCNAME=python-gridftp
+# Use this Makefile as a template for 
+#   debian "native" packages
+#   SL packages with corresponding version
+# 
+# Customize it by modifying 2 variables: PKGNAME and VERSION
+# 
+# (C) Jeffery Kline 2011
+# GNU/GPL v3
+PKGNAME=python-gridftp
+VERSION=1.3.1
 
-all: 
+# RPMDIR is used by Scientific Linux
+#        causes no harm on Debian.
+RPMDIR=$(HOME)/rpmbuild
+
+help: 
 	@echo
 	@echo
 	@echo "Targets are:"
-	@echo "    all, clean, install, srpm, rpm and deb"
+	@echo "    help, clean, install, srpm, rpm and deb"
 	@echo
-	@echo "all: print this message"
+	@echo "help: print this message"
 	@echo "clean: remove stuff"
-	@echo "install: python setup.py install --root=debian/$(SRCNAME) --prefix=/usr"
+	@echo "install: run the command" 
+	@echo "    python setup.py install --root=DESTDIR --prefix=/usr"
 	@echo "srpm: clean and then build the source rpm"
 	@echo "rpm: clean and then build the rpm and source rpm"
 	@echo "deb: create an orig.tar.gz file and run debuild -uc -us"
@@ -19,59 +31,49 @@ all:
 
 clean:
 	$(RM) -r\
-		$(RPMDIR)/*/$(SRCNAME)*\
-		$(RPMDIR)/*/*/$(SRCNAME)*\
-		../$(SRCNAME)_*.deb\
-		../$(SRCNAME)_*.dsc\
-		../$(SRCNAME)_*.changes\
-		../$(SRCNAME)_*.build\
-		../$(SRCNAME)_*.debian.*\
+		$(RPMDIR)/*/$(PKGNAME)*\
+		$(RPMDIR)/*/*/$(PKGNAME)*\
+		../$(PKGNAME)_*\
 		*.pyc\
 		build\
 		dist\
 		MANIFEST\
-		debian/$(SRCNAME)\
-		debian/$(SRCNAME).*.log\
-		debian/$(SRCNAME).*.debhelper\
-		debian/$(SRCNAME).substvars\
+		debian/$(PKGNAME)\
+		debian/$(PKGNAME).*.log\
+		debian/$(PKGNAME).*.debhelper\
+		debian/$(PKGNAME).substvars\
 		debian/files
 
-install:
+# debhelper notes:
+#   since this Makefile exists, debhelper will
+#     - ignore setup.py files. setup.py must be called manually.
+#     - run make clean, make, make install.
+install: version
 	python setup.py install --root=${DESTDIR} --prefix=/usr
 
 # Scientific Linux source rpm
-srpm: clean
-	#
+srpm: version clean
 	# copy the local specfile to the necessary place
-	#
-	cp $(SRCNAME).spec $(RPMDIR)/SPECS/
-	# 
+	install $(PKGNAME).spec $(RPMDIR)/SPECS/
 	# create the tar.gz file 
-	#
-	tar -cf\
-		$(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar\
-		--transform=s/\./$(SRCNAME)-$(VERSION)/\
+	tar -zcf\
+		$(RPMDIR)/SOURCES/$(PKGNAME)-$(VERSION).tar.gz\
+		--transform=s/\./$(PKGNAME)-$(VERSION)/\
 		--exclude-vcs\
 		.
-	gzip $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar
-	#
 	# build the source from the specfile
-	# 
-	rpmbuild -bs $(RPMDIR)/SPECS/$(SRCNAME).spec
+	rpmbuild -bs $(RPMDIR)/SPECS/$(PKGNAME).spec
 
 rpm: srpm
-	#
 	# build all
-	# 
-	rpmbuild -ba $(RPMDIR)/SPECS/$(SRCNAME).spec
+	rpmbuild -ba $(RPMDIR)/SPECS/$(PKGNAME).spec
+
+version:
+	@echo "Expect version number to match $(VERSION)"
+	@echo "  VERSION in Makefile, most recent version" 
+	@echo "  in debian/changelog must match"
+	head -n1 debian/changelog | grep '($(VERSION))' 
 
 # debian commands to build deb files
-deb: clean
-	$(RM) ../$(SRCNAME)_$(VERSION).orig.tar.gz
-	tar -cf\
-		../$(SRCNAME)_$(VERSION).orig.tar\
-		--transform=s/\./$(SRCNAME)_$(VERSION)/\
-		--exclude-vcs\
-		.
-	gzip ../$(SRCNAME)_$(VERSION).orig.tar
+deb: version
 	debuild -rfakeroot -D -uc -us
