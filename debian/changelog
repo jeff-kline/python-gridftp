@@ -15,7 +15,19 @@ python-gridftp (1.3.0-1.1) unstable; urgency=low
 
  -- Jeffery Kline <kline@gravity.phys.uwm.edu>  Fri, 16 Dec 2011 13:34:20 -0600
 
-python-gridftp (1.1.0-1.1) unstable; urgency=low
+python-gridftp (1.3.0-1) unstable; urgency=low
+
+  * Support for natively packaged Globus 
+
+ -- Scott Koranda <skoranda@gravity.phys.uwm.edu>  Thu, 15 Sep 2011 14:43:21 -0500
+
+python-gridftp (1.2.0-1) unstable; urgency=low
+
+  * Support for popen functionality 
+
+ -- Scott Koranda <skoranda@gravity.phys.uwm.edu>  Wed, 23 Feb 2011 22:12:01 -0600
+
+python-gridftp (1.1.0-1) unstable; urgency=low
 
   * Support for 'exists' and better destruction of handles. 
 

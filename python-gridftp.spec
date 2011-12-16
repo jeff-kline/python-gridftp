@@ -34,3 +34,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f INSTALLED_FILES
 %defattr(-,root,root)
+
+%changelog
+* Fri Dec 02 2011 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.3.0-1
+- Support for natively packaged Globus 
+
+* Wed Feb 23 2011 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.2.0-1
+- Support for popen functionality 
+
+* Mon Oct 19 2009 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.1.0-1
+- Support for 'exists' and better destruction of handles. 
+
+* Mon Jun 08 2009 Scott Koranda <skoranda@gravity.phys.uwm.edu> - 1.0.0-1
+- Initial release

@@ -22,6 +22,12 @@ linkFlags = [
 "-lglobus_common",
 ]
 
+if platform.dist()[0] == 'debian':
+        my_include_dirs=[ "/usr/include/globus", "/usr/lib/globus/include" ]
+else:
+        my_include_dirs=[ "/usr/include/globus", "/usr/lib64/globus/include" ]
+    
+
 e = Extension(
         "gridftpwrapper",
         ["gridftpwrapper.c"],
@@ -35,8 +41,8 @@ extModList = [e]
 setup(name="python-gridftp",
       version="1.3.0",
       description="Python GridFTP client bindings",
-      author="Scott Koranda",
-      author_email="ldr-lsc@gravity.phys.uwm.edu",
+      author="Jeff Kline",
+      author_email="kline@gravity.phys.uwm.edu",
       url="http://www.lsc-group.phys.uwm.edu/LDR",
       py_modules=["gridftpClient", "gridftpwrapper"],
       ext_modules=extModList
