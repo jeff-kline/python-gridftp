@@ -72,7 +72,15 @@ version:
 	@echo "Expect version number to match $(VERSION)"
 	@echo "  VERSION in Makefile, most recent version" 
 	@echo "  in debian/changelog must match"
+	@echo "  in $(PKGNAME) must match"
+	@echo 
+	@echo "  Checking Debian Version"
 	head -n1 debian/changelog | grep '($(VERSION))' 
+	@echo "  Debian OK."
+	@echo 
+	@echo "  Checking Scientific Linux Version"
+	grep -E '%define .*version[[:space:]]+$(VERSION)' $(PKGNAME).spec
+	@echo "  SL OK."
 
 # debian commands to build deb files
 deb: version

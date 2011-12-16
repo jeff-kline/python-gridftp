@@ -1,6 +1,6 @@
 %define name python-gridftp
-%define version 1.3.0
-%define unmangled_version 1.3.0
+%define version 1.3.1
+%define unmangled_version %{version}
 %define release 1
 
 Summary: Python Globus GridFTP client bindings
