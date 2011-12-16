@@ -4,6 +4,12 @@
 # 
 # Customize it by modifying 2 variables: PKGNAME and VERSION
 # 
+# 'make chk_ver' will run checks on debian package version and 
+# SL package version.  It will error out if the versions do not
+# agree.
+#
+# 
+# 
 # (C) Jeffery Kline 2011
 # GNU/GPL v3
 PKGNAME=python-gridftp
@@ -48,11 +54,11 @@ clean:
 #   since this Makefile exists, debhelper will
 #     - ignore setup.py files. setup.py must be called manually.
 #     - run make clean, make, make install.
-install: version
+install: chk_ver
 	python setup.py install --root=${DESTDIR} --prefix=/usr
 
 # Scientific Linux source rpm
-srpm: version clean
+srpm: chk_ver clean
 	# copy the local specfile to the necessary place
 	install $(PKGNAME).spec $(RPMDIR)/SPECS/
 	# create the tar.gz file 
@@ -68,20 +74,24 @@ rpm: srpm
 	# build all
 	rpmbuild -ba $(RPMDIR)/SPECS/$(PKGNAME).spec
 
-version:
+chk_ver:
 	@echo "Expect version number to match $(VERSION)"
 	@echo "  VERSION in Makefile, most recent version" 
 	@echo "  in debian/changelog must match"
-	@echo "  in $(PKGNAME) must match"
+	@echo "  in $(PKGNAME).spec must match"
 	@echo 
 	@echo "  Checking Debian Version"
-	head -n1 debian/changelog | grep '($(VERSION))' 
+	@head -n1 debian/changelog | grep '($(VERSION))' > /dev/null
 	@echo "  Debian OK."
 	@echo 
 	@echo "  Checking Scientific Linux Version"
-	grep -E '%define .*version[[:space:]]+$(VERSION)' $(PKGNAME).spec
+	@if [ -f $(PKGNAME).spec ]; then\
+	  grep -E '%define version +$(VERSION)' $(PKGNAME).spec > /dev/null;\
+	else\
+	  echo "** No file $(PKGNAME).spec. Silently continuing.";\
+	fi
 	@echo "  SL OK."
 
 # debian commands to build deb files
-deb: version
+deb: chk_ver
 	debuild -rfakeroot -D -uc -us
