@@ -1,7 +1,8 @@
 Source: python-gridftp
 Section: python
 Priority: extra
-Maintainer: Scott Koranda <skoranda@gravity.phys.uwm.edu>
+Maintainer: LIGO LDR team <ldr@ligo.org>
+Uploaders: Scott Koranda <skoranda@gravity.phys.uwm.edu>, Jeffery Kline <kline@gravity.phys.uwm.edu>
 Build-Depends: debhelper (>= 7), python-all-dev (>= 2.6.6), libglobus-ftp-client-dev 
 Standards-Version: 3.9.1
 Homepage: https://wiki.ligo.org/LDG/DASWG/LIGODataReplicator

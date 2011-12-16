@@ -48,12 +48,11 @@ srpm: clean
 	# 
 	# create the tar.gz file 
 	#
-	tar -cf\
-		$(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar\
+	tar -zcf\
+		$(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar.gz\
 		--transform=s/\./$(SRCNAME)-$(VERSION)/\
 		--exclude-vcs\
 		.
-	gzip $(RPMDIR)/SOURCES/$(SRCNAME)-$(VERSION).tar
 	#
 	# build the source from the specfile
 	# 
@@ -68,10 +67,9 @@ rpm: srpm
 # debian commands to build deb files
 deb: clean
 	$(RM) ../$(SRCNAME)_$(VERSION).orig.tar.gz
-	tar -cf\
-		../$(SRCNAME)_$(VERSION).orig.tar\
+	tar -zcf\
+		../$(SRCNAME)_$(VERSION).orig.tar.gz\
 		--transform=s/\./$(SRCNAME)_$(VERSION)/\
 		--exclude-vcs\
 		.
-	gzip ../$(SRCNAME)_$(VERSION).orig.tar
 	debuild -rfakeroot -D -uc -us
