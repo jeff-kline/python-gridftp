@@ -13,7 +13,7 @@
 # (C) Jeffery Kline 2011
 # GNU/GPL v3
 PKGNAME=python-gridftp
-VERSION=1.3.1
+VERSION=1.3.2
 
 # RPMDIR is used by Scientific Linux
 #        causes no harm on Debian.

@@ -106,6 +106,20 @@ static globus_module_descriptor_t   *modules[] = {
   GLOBUS_FTP_CLIENT_MODULE,
 };                        
 
+static void prepare()
+{}
+
+static void parent()
+{}
+
+static void child()
+{ 
+  sigset_t sm;
+  sigemptyset(&sm);
+  pthread_sigmask(SIG_SETMASK, &sm, NULL);
+}
+
+
 #define NMODS   (sizeof(modules) / sizeof(globus_module_descriptor_t *))
 
 //
@@ -1047,6 +1061,16 @@ PyObject * gridftp_modules_activate(PyObject * self, PyObject * args)
 	  PyErr_SetString(PyExc_RuntimeError, "gridftpwrapper: unable to activate Globus module");
         }
     }
+
+    // one of the globus modules changes the signal handling behavior.
+    // http://jira.globus.org/browse/GT-360
+    // The next line ensures that any forked subprocesses still catch
+    // SIGTERM, SIGHUP, SIGINT. Without this line, these signals are
+    // not passed along and forked processes will miss these messages.
+    Py_BEGIN_ALLOW_THREADS
+      pthread_atfork(&prepare, &parent, &child);
+    Py_END_ALLOW_THREADS
+
 
     Py_RETURN_NONE;
 }

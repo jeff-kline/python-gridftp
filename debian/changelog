@@ -1,3 +1,9 @@
+python-gridftp (1.3.2) unstable; urgency=low
+
+  * Fix signal handling problem related to globus activate module call
+
+ -- Jeffery Kline <kline@gravity.phys.uwm.edu>  Sat, 26 Jan 2013 19:09:53 -0600
+
 python-gridftp (1.3.1) unstable; urgency=low
 
   * Merge development of debian versions into main branch

@@ -267,6 +267,22 @@ try:
         md5_event.wait()
         md5_event.clear()
         print dst, md5hash
+
+    exists_event = Event()
+    exists_err = None
+    exists_arg = bytearray(1)
+    def exists_cb(arg, handle, error):
+        arg[0] = bool(not error)
+        exists_event.set()
+
+    dst_list = [ 'gsiftp://%s:%d/etc/foo_issue' % (getfqdn(), gridftp_server.port),
+                 'gsiftp://%s:%d/etc/issue' % (getfqdn(), gridftp_server.port)]
+    for f in dst_list:
+        cli.exists(f, exists_cb, exists_arg, op)
+        exists_event.wait()
+        exists_event.clear()
+        print f, bool(exists_arg[0])
+        
 finally:
     op.destroy()
     hattr.destroy()
