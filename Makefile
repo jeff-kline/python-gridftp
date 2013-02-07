@@ -13,7 +13,7 @@
 # (C) Jeffery Kline 2011
 # GNU/GPL v3
 PKGNAME=python-gridftp
-VERSION=1.3.2
+VERSION=1.3.3
 
 # RPMDIR is used by Scientific Linux
 #        causes no harm on Debian.
@@ -55,7 +55,7 @@ clean:
 #     - ignore setup.py files. setup.py must be called manually.
 #     - run make clean, make, make install.
 install: chk_ver
-	python setup.py install --root=${DESTDIR} --prefix=/usr
+	python setup.py install --root=${DESTDIR} --install-layout=deb 
 
 # Scientific Linux source rpm
 srpm: chk_ver clean
@@ -74,23 +74,23 @@ rpm: srpm
 	# build all
 	rpmbuild -ba $(RPMDIR)/SPECS/$(PKGNAME).spec
 
+
 chk_ver:
-	@echo "Expect version number to match $(VERSION)"
-	@echo "  VERSION in Makefile, most recent version" 
-	@echo "  in debian/changelog must match"
-	@echo "  in $(PKGNAME).spec must match"
-	@echo 
-	@echo "  Checking Debian Version"
+	@echo "Version of ${PKGNAME} should be $(VERSION)"
+	@echo -n "  Checking Debian, use file 'debian/changelog'."
 	@head -n1 debian/changelog | grep '($(VERSION))' > /dev/null
-	@echo "  Debian OK."
-	@echo 
-	@echo "  Checking Scientific Linux Version"
+	@echo "..Debian OK."
+	@echo -n "  Checking Scientific Linux Version, use file '${PKGNAME}.spec'."
 	@if [ -f $(PKGNAME).spec ]; then\
 	  grep -E '%define version +$(VERSION)' $(PKGNAME).spec > /dev/null;\
 	else\
-	  echo "** No file $(PKGNAME).spec. Silently continuing.";\
+	  echo "..No file $(PKGNAME).spec. Silently continuing.";\
 	fi
-	@echo "  SL OK."
+	@echo "..SL OK."
+	@echo -n "  Checking Python Version, use file ./setup.py'.";
+	@grep -E "version[[:space:]]*=[[:space:]]*[[:punct:]]$(VERSION)[[:punct:]]" ./setup.py > /dev/null
+	@echo "..Python OK."
+
 
 # debian commands to build deb files
 deb: chk_ver

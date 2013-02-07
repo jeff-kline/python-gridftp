@@ -1049,6 +1049,13 @@ PyObject * gridftp_modules_activate(PyObject * self, PyObject * args)
     int           i;
     int           rc;
 
+    // this is new with Globus 5.2.x
+    Py_BEGIN_ALLOW_THREADS
+	globus_thread_set_model("pthread");
+    Py_END_ALLOW_THREADS
+	
+
+
     for (i = 0; i < NMODS; i++){
     
         Py_BEGIN_ALLOW_THREADS
@@ -2731,7 +2738,7 @@ PyObject * gridftp_exists(PyObject *self, PyObject *args)
     Py_BEGIN_ALLOW_THREADS
 
     gridftp_result = globus_ftp_client_exists(
-                        handlep,
+		         handlep,
                         url,
                         operation_attrp,
                         exists_complete_callback,

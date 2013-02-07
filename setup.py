@@ -3,6 +3,7 @@ import sys
 import platform
 from distutils.core import setup, Extension
 
+version="1.3.3"
 GLOBUS_LOCATION = "/usr"
 
 try:
@@ -32,14 +33,14 @@ e = Extension(
         "gridftpwrapper",
         ["gridftpwrapper.c"],
         include_dirs=my_include_dirs,
-        extra_compile_args=["-O0", "-Wno-strict-prototypes" ],
+        extra_compile_args=["-O1", "-Wno-strict-prototypes", "-D_FORTIFY_SOURCE=2", "-fstack-protector"],
         extra_link_args=linkFlags
         )
 
 extModList = [e]
 
 setup(name="python-gridftp",
-      version="1.3.0",
+      version=version,
       description="Python GridFTP client bindings",
       author="Jeff Kline",
       author_email="kline@gravity.phys.uwm.edu",

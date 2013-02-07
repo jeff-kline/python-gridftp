@@ -3,12 +3,13 @@ Section: python
 Priority: extra
 Maintainer: LIGO LDR team <ldr@ligo.org>
 Uploaders: Scott Koranda <skoranda@gravity.phys.uwm.edu>, Jeffery Kline <kline@gravity.phys.uwm.edu>
-Build-Depends: debhelper (>= 7), python-all-dev (>= 2.6.6), libglobus-ftp-client-dev 
-Standards-Version: 3.9.1
+Build-Depends: debhelper (>= 9), python-all-dev (>= 2.6.6), libglobus-ftp-client-dev 
+Standards-Version: 3.9.4
+X-Python-Version: >= 2.6
 Homepage: https://wiki.ligo.org/LDG/DASWG/LIGODataReplicator
 
 Package: python-gridftp
 Architecture: any
-Depends: python (>= 2.6.6), ${shlibs:Depends}, ${misc:Depends}
+Depends: python (>= 2.6),  ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}
 Description: Python Globus GridFTP client bindings
  Bindings for Python Globus GridFTP client, written in C as python module
