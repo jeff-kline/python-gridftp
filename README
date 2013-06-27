@@ -1,19 +1,10 @@
-Prior to compiling, first generate "makefile_header" for the Globus
-installation you are using for development by doing
+To build debian Wheezy packages, do
 
-globus-makefile-header --flavor=FLAVOR > makefile_header
+  make deb
 
-where FLAVOR is the target flavor you are building. For
-example
+to build Centos 6.4 RPMs, do
 
-globus-makefile-header --flavor=gcc64dbgpthr > makefile_header
+  make rpm
 
-For making an installation, do the following:
-
-1) Run 'make clean' and 'make' to build fresh.
-
-2) Run 'python setup.py sdist --formats=gztar' to create the tarball
-distribution in the dist directory.
-
-3) The tarball can be installed directly by doing 
-'python setup.py install' inside of it.
+Some simple tests are in the files named test_*. These are more
+akin to minimal examples than tests, but better than nothing.
