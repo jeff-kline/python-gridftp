@@ -8,10 +8,11 @@ from threading import Event
 from time import sleep
 from tempfile import mkdtemp
 from urlparse import urlparse, urlunparse
-from os import chmod, environ, makedirs, rmdir, symlink, unlink
+from os import chmod, environ, makedirs, rmdir, symlink, unlink, umask
 from os.path import basename, dirname, getsize, isfile, join
 
 TRUSTED_CERT_DIR = join(environ['HOME'], '.globus', 'certificates')
+umask(0022)
 
 '''
 the openssl commands is based on information found at
