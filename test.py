@@ -7,8 +7,10 @@ from subprocess import PIPE, Popen
 from threading import Event
 from time import sleep
 from tempfile import mkdtemp
-from os import chmod, environ, makedirs, symlink, unlink
+from os import chmod, environ, makedirs, symlink, umask, unlink
 from os.path import basename, getsize, isfile, join
+
+umask(0022)
 
 TRUSTED_CERT_DIR = join(environ['HOME'], '.globus', 'certificates')
 
